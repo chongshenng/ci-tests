@@ -14,6 +14,10 @@ jobs:
         include:
           - directory: one
           - directory: two
+    name: Lorem / ${{ matrix.directory }}
+    defaults:
+      run:
+        working-directory: e2e/${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
