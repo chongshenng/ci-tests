@@ -17,6 +17,7 @@ dependencies = [
     "pandas>=2.0.0,<3.0.0",
     "scikit-learn>=1.1.1,<2.0.0",
     "pytest",
+    "requests",
 ]
 
 [tool.hatch.build.targets.wheel]
