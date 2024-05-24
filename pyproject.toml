@@ -11,6 +11,7 @@ authors = [
 ]
 dependencies = [
     "flwr",
+    "pytest",
 ]
 
 [tool.hatch.build.targets.wheel]
