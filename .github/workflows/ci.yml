@@ -36,7 +36,7 @@ jobs:
           echo "Displaying caches..."
           for cacheKey in $cacheKeysForPR
           do
-            echo $cacheKey
+            echo "$cacheKey"
           done
           echo "Done"
         env:
