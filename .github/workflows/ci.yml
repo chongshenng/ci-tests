@@ -1,4 +1,4 @@
-name: Cleanup
+name: Cache cleanup
 on:
   workflow_dispatch:
 
@@ -46,7 +46,8 @@ jobs:
           for cacheKey in $cacheKeys
           do
             if [ "$cacheKey" != "$LATEST_KEY" ]; then
-              echo "\tOld key detected -> $cacheKey"
+              echo -e "\tOld key found -> $cacheKey"
+              echo -e "\tWill run -> gh actions-cache delete "$cacheKey" --confirm"
             fi
           done
 
