@@ -32,12 +32,22 @@ jobs:
           
           REPO=${{ github.repository }}
           BRANCH=refs/pull/${{ github.event.pull_request.number }}/merge
-          KEY=pythonloc-${{ matrix.directory }}-${{ env.pythonLocation }}-${{ hashFiles(format('./e2e/{0}/pyproject.toml', matrix.directory)) }}
+          KEY_LATEST=pythonloc-${{ matrix.directory }}-${{ env.pythonLocation }}-${{ hashFiles(format('./e2e/{0}/pyproject.toml', matrix.directory)) }}
 
           echo "Fetching list of cache key"
-          cacheKeysForPR=$(gh actions-cache list -R $REPO --key $KEY | cut -f 1 )
+          cacheKeys=$(gh actions-cache list -R $REPO | cut -f 1 )
 
-          echo "$cacheKeysForPR"
+          echo "$cacheKeys"
+
+          ## Setting this to not fail the workflow while deleting cache keys. 
+          set +e
+          echo "Displaying caches..."
+          for cacheKey in $cacheKeys
+          do
+            if [ "$KEY_LATEST" == "$cacheKey" ]; then
+              echo "Match -> $cacheKey"
+            fi
+          done
 
           echo "Done"
         env:
