@@ -1,4 +1,4 @@
-name: List caches by a branch
+name: Cleanup
 on:
   workflow_dispatch:
 
@@ -26,26 +26,27 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Cleanup
+      - name: Cleanup caches
+        # Only keep caches that match the latest keys
         run: |
           gh extension install actions/gh-actions-cache
           
           REPO=${{ github.repository }}
           BRANCH=refs/pull/${{ github.event.pull_request.number }}/merge
-          KEY_LATEST=pythonloc-${{ matrix.directory }}-${{ env.pythonLocation }}-${{ hashFiles(format('./e2e/{0}/pyproject.toml', matrix.directory)) }}
+          LATEST_KEY=pythonloc-${{ matrix.directory }}-${{ env.pythonLocation }}-${{ hashFiles(format('./e2e/{0}/pyproject.toml', matrix.directory)) }}
 
-          echo "Fetching list of cache key"
+          echo "Fetching list of cache keys"
           cacheKeys=$(gh actions-cache list -R $REPO | cut -f 1 )
 
           echo "$cacheKeys"
 
           ## Setting this to not fail the workflow while deleting cache keys. 
           set +e
-          echo "Displaying caches..."
+          echo "Deleting caches..."
           for cacheKey in $cacheKeys
           do
-            if [ "$KEY_LATEST" == "$cacheKey" ]; then
-              echo "Match -> $cacheKey"
+            if [ "$cacheKey" != "$LATEST_KEY" ]; then
+              echo "Old key -> $cacheKey"
             fi
           done
 
