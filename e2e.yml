@@ -11,10 +11,15 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+        directory:
+          - one-two
+          - one
+          - two
         include:
           - directory: one
           - directory: two
-    name: Lorem / ${{ matrix.directory }}
+    name: Lorem / ${{ matrix.directory }} / Python ${{ matrix.python-version }} 
     defaults:
       run:
         working-directory: e2e/${{ matrix.directory }}
@@ -23,7 +28,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }} 
       - name: Install build tools
         run: |
             python -m pip install -U pip==23.3.1
@@ -38,3 +43,5 @@ jobs:
           key: pythonloc-${{ matrix.directory }}-${{ env.pythonLocation }}-${{ hashFiles('./e2e/*/pyproject.toml') }}
       - name: Install dependencies
         run: python -m pip install --upgrade .
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
